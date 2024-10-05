@@ -1,0 +1,41 @@
+#submitButton {
+    margin-top: 80px;
+    right:0;
+    margin-left: 10px;
+}
+.adminPost {
+    padding: 20px;
+    height: 50vh;
+    position: relative;
+    overflow-y: hidden;
+}
+.postTextArea {
+    display: flex;
+    height: 25vh;
+    max-height: 30vh;
+    justify-content: space-between;
+}
+textarea {
+    margin-top: 13px !important;
+    min-height: 2vh;
+    max-height: 20vh;
+}
+.file-field {
+    /* background-color: aqua; */
+    width: 50vw !important; 
+    height: 40px !important;
+}
+header {
+    background-color: #F9BE1E;
+    width: 100vw;
+    height: 100px;
+}
+.logoutButton {
+    cursor: pointer;
+    font-size: large;
+    margin-top: 30px;
+    margin-right: 90px;
+}
+.logoutButton:hover {
+    color: black !important;
+}
