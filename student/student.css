@@ -49,7 +49,7 @@ textarea {
     padding: 30px;
 }
 .navText {
-    font-size: 1.5rem !important;
+    font-size: 1.5em !important;
 }
 .selected {
     font-weight: bold !important;
@@ -59,7 +59,7 @@ header div ul {
     display: flex;
     flex-direction: row-reverse;
     justify-content: space-evenly;
-    width: 30vh;
+    width: 30vw;
 }
 .grid {
     display: flex;

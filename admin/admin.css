@@ -54,7 +54,7 @@ header div ul {
     display: flex;
     flex-direction: row-reverse;
     justify-content: space-evenly;
-    width: 30vh;
+    width: 30vw;
 }
 div {
     margin: 5px;
@@ -76,9 +76,9 @@ div {
 }
 .adminPost {
     padding: 20px;
-    height: 50vh;
+    height: 85vh;
     position: relative;
-    overflow-y: hidden;
+    overflow-y: scroll;
 }
 .postTextArea {
     display: flex;
