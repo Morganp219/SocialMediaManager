@@ -2,7 +2,7 @@ var approve = document.getElementById('approveCard_1');
 var deny = document.getElementById('denyCard_1');
 var cardHolder = document.getElementById('cardholder');
 var section = document.getElementById('containerSection');
-var sidenavtrigger = document.getElementById('sidenav-trigger');
+var sidenavtrigger = document.querySelector('.sidenav-trigger');
 
 if(approve) {
     approve.addEventListener('click', function() {

@@ -49,7 +49,10 @@ header h2 {
 }
 
 .fhYellow {
-    background-color: #F9BE1E;
+    background-color: #F9BE1E !important;
+}
+.fhYellowText {
+    color: #F9BE1E !important;
 }
 @media screen and (max-width: 900px) {
     .loginFlex {

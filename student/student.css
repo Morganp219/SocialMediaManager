@@ -25,8 +25,84 @@ textarea {
     width: 50vw !important; 
     height: 40px !important;
 }
-header {
+.navText {
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-decoration: none;
+    color: black;
+}
+.navText:hover {
+    color: white;
+}
+#slide-out {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 50vw;
     background-color: #F9BE1E;
+    padding: 20px;
+}
+#slide-out li {
+    font-size: larger !important;
+    padding: 30px;
+}
+.navText {
+    font-size: 1.5rem !important;
+}
+.selected {
+    font-weight: bold !important;
+}
+
+header div ul {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-evenly;
+    width: 30vh;
+}
+.grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    align-items: center;
+}
+#cardholder {
+    height: auto;
+    margin-top: 40px;
+    width: 400px;
+}
+.desktopLogo {
+    margin: 10px;
+    padding: 10px;
+    margin-left: 50px;
+    height: 100px;
+}
+@media screen and (max-width: 900px) {
+    #cardholder {
+        margin-top: 10px;
+    }
+}
+header div {
+    display: flex;
+    height: 100px;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #F9BE1E;
+}
+header div a {
+    margin-left: 20px;
+}
+.material-icons {
+    font-size: 4rem !important;
+    
+}
+
+header div h5 {
+    margin-left: 30px;
+}
+header {
+    margin: 0 !important;
     width: 100vw;
     height: 100px;
 }

@@ -9,8 +9,12 @@ header {
     flex-direction: row;
     justify-content: space-between;
     padding: 20px;
+    height: 150px !important;
 }
-
+.material-icons {
+    margin-left: 7vw;
+    font-size: 4rem !important;
+}
 /* Admin Page */
 .navText {
     font-size: 1.2rem;
@@ -41,6 +45,11 @@ header {
 .selected {
     font-weight: bold !important;
 }
+.desktopLogo {
+    margin: 10px;
+    margin-left: 50px;
+    height: 100px;
+}
 header div ul {
     display: flex;
     flex-direction: row-reverse;
@@ -49,6 +58,10 @@ header div ul {
 }
 div {
     margin: 5px;
+}
+.userCard {
+    width: 200px;
+        
 }
 #cardholder {
     height: auto;
@@ -83,36 +96,15 @@ textarea {
     width: 50vw !important; 
     height: 40px !important;
 }
-@media screen and (max-width: 900px) {
+.grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    align-items: center;
+}
+@media screen and (max-width: 1000px) {
     #cardholder {
          overflow-y: visible; 
          height: auto;
     }
-    /* header {
-        width: 100vw;
-        height: 100vh;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-       
-    }
-    header div ul {
-        display: flex;
-        flex-direction: column-reverse;
-        justify-content: space-evenly;
-        width: auto;
-        height: 30vh;
-    }
-    ul {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-evenly;
-        align-items: center;
-        width: 100vw;
-        height: 100vh;
-    }
-    hr {
-        border: 0.1px solid black;
-        width: 60vw;
-    } */
 }
