@@ -20,6 +20,7 @@ if(deny) {
     })
 }
 
+
 if(section) {
 
     changeScreenSize(window.matchMedia("(max-width: 900px)").matches);
@@ -28,7 +29,11 @@ if(section) {
     }
 }
 
+// Implementation of Service Worker
 
+if('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('../sw.js');
+}
 
 
 
