@@ -14,9 +14,9 @@ window.matchMedia("(max-width: 900px)").onchange = function (e) {
 
 loginButton.addEventListener('click', function(e) {
     e.preventDefault();
-    if(username.value == 'admin' && password.value == 'admin') {
+    if(username.value.toLowerCase() == 'admin' && password.value.toLowerCase() == 'admin') {
         window.location.href = './admin/admin.html';
-    } else if(username.value == 'student' && password.value == 'student') {
+    } else if(username.value.toLowerCase() == 'student' && password.value.toLowerCase() == 'student') {
         window.location.href = './student/student.html';
     }
     else {
