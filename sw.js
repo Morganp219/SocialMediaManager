@@ -2,8 +2,6 @@ self.addEventListener("install", event => {
     console.log("Service worker installed");
     const installCache = () => {
     caches.open("socialmediamgr").then(async cache => {
-               
-        // Home Page
         try {
             await cache.addAll(["./index.html", "./styles/style.css", "./main.js", "./styles/materialize.min.css", "./styles/materialize.min.js", "./student/student.html", "./student/student.css", "./student/student.js", "./admin/admin.html", "./admin/admin.css", "./admin/admin.js", "./admin/users.html", "./manifest.json", "./images/icon.png", "./images/Designer.jpeg", "./images/pexels-barbland-28260049.jpg", "./images/pexels-personone.jpg", "./images/pexels-pixabay-270404.jpg", "./images/pexels-pixabay-302769.jpg"])
             console.log("Caching complete");
