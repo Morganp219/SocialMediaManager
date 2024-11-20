@@ -1,24 +1,17 @@
-var approve = document.getElementById('approveCard_1');
-var deny = document.getElementById('denyCard_1');
+import { createPost, deletePost, getPosts, updatePost } from '../databasescripts/PostsDB.js';
+;
 var cardHolder = document.getElementById('cardholder');
 var section = document.getElementById('containerSection');
 var sidenavtrigger = document.querySelector('.sidenav-trigger');
 
-if(approve) {
-    approve.addEventListener('click', function() {
-        alert('Approved');
-        // TODO: Remove the appropriate card.
-        cardHolder.innerHTML = '<h4>Pending Posts</h4>';
-    })
-}
+var submitButton = document.getElementById('submitButton')
+var title = document.getElementById('titlePostTextArea')
+var content = document.getElementById('textarea1')
 
-if(deny) {
-    deny.addEventListener('click', function() {
-        alert('Denied');
-        // TODO: Remove the appropriate card.
-        cardHolder.innerHTML = '<h4>Pending Posts</h4>';
-    })
-}
+
+submitButton.addEventListener('click', () => {
+    submit()
+})
 
 
 if(section) {
@@ -34,7 +27,6 @@ if(section) {
 if('serviceWorker' in navigator) {
     navigator.serviceWorker.register('../sw.js');
 }
-
 
 
 
@@ -59,3 +51,11 @@ document.addEventListener('DOMContentLoaded', function() {
         instances[0].open();
     })
 });
+
+function submit() {
+    console.log("Submit");
+    
+    createPost(title.value, content.value, new Date(), false, "1")
+    title.value = ""
+    content.value = ""
+}

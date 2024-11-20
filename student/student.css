@@ -5,9 +5,9 @@
 }
 .adminPost {
     padding: 20px;
-    height: 50vh;
+    height: 55vh;
     position: relative;
-    overflow-y: hidden;
+    overflow-y: scroll;
 }
 .postTextArea {
     display: flex;
@@ -67,8 +67,14 @@ header div ul {
     justify-content: space-evenly;
     align-items: center;
 }
-#cardholder {
-    height: auto;
+.spacer {
+    flex-grow: 1;
+}
+.card {
+    height: 800px;
+}
+.cardholder {
+    height: 800px;
     margin-top: 40px;
     width: 400px;
 }
@@ -79,7 +85,7 @@ header div ul {
     height: 100px;
 }
 @media screen and (max-width: 900px) {
-    #cardholder {
+    .cardholder {
         margin-top: 10px;
     }
 }

@@ -11,7 +11,8 @@
     <script src="../styles/materialize.min.js"></script>
     <meta name="theme-color" content="#F9BE1E">
     <link rel="manifest" href="../manifest.json">
-    <script defer src="student.js"></script>
+    <script defer src="../scripts/PostsDB.js" type="module"></script>
+    <script defer src="student.js" type="module"></script>
     <link rel="shortcut icon" href="../images/icon.png" type="image/x-icon">
 </head>
 <body>
@@ -51,8 +52,12 @@
 
         <div class="col s5 z-depth-4 adminPost" >
             <h4>Post to Social Media!</h4>
-            <div class="input-field col s12 postTextArea" style="display: flex;">
-                <textarea rows="8" cols="8"  wrap="hard" maxlength="400" id="textarea1" class="materialize-textarea"></textarea>
+            <div class="input-field col s12 postTextArea" style="display: flex; height: 100px;">
+              <textarea rows="8" cols="8"  wrap="hard" maxlength="50" id="titlePostTextArea" class="materialize-textarea"></textarea>
+              <label for="textarea1">Post Title</label>
+            </div>
+            <div class="input-field col s12 postTextArea" style="display: flex; height: 100px;">
+                <textarea rows="8" cols="8"  wrap="hard" maxlength="300" id="textarea1" class="materialize-textarea"></textarea>
                 <label for="textarea1">Post Body</label>
               </div>
               <form style="position: absolute;">
@@ -69,77 +74,24 @@
               <button id="submitButton" class="btn waves-effect waves-light" type="submit">Submit for Approval!</button>
         </div>
         <h4 class="center-align">Your Previous Posts</h4>
-        <div class="grid">
-            <div class="col s1"  id="cardholder">
-                <div class="card blue-grey darken-1 z-depth-3" >
-                    <div class="card-content white-text">
-                      <span class="card-title">Post Name</span>
-                      <p><i>Pending</i></p>
-                      <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Vero quaerat, doloremque incidunt veniam pariatur quis labore voluptate magni, necessitatibus numquam deserunt culpa exercitationem nostrum laborum illum iste neque. Quasi, modi!</p>
-                        <img style="margin-top: 20px; " class="responsive-img" src="../images/pexels-barbland-28260049.jpg" alt="Blueberry Pancake">
-                    </div>
-                  </div>
-            </div>
-
-            <div class="col s1"  id="cardholder">
-                
-                <div class="card blue-grey darken-1 z-depth-3">
-                    <div class="card-content white-text">
-                      <span class="card-title">Post Name</span>
-                      <p><i>Approved</i></p>
-                      <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Vero quaerat, doloremque incidunt veniam pariatur quis labore voluptate magni, necessitatibus numquam deserunt culpa exercitationem nostrum laborum illum iste neque. Quasi, modi!</p>
-                        <img style="margin-top: 20px; " class="responsive-img" src="../images/pexels-barbland-28260049.jpg" alt="Blueberry Pancake">
-                    </div>
-                  </div>
-            </div>
-
-            <div class="col s1"  id="cardholder">
-                <div class="card blue-grey darken-1 z-depth-3" >
-                    <div class="card-content white-text">
-                      <span class="card-title">Post Name</span>
-                      <p><i>Pending</i></p>
-                      <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Vero quaerat, doloremque incidunt veniam pariatur quis labore voluptate magni, necessitatibus numquam deserunt culpa exercitationem nostrum laborum illum iste neque. Quasi, modi!</p>
-                        <img style="margin-top: 20px; " class="responsive-img" src="../images/pexels-barbland-28260049.jpg" alt="Blueberry Pancake">
-                    </div>
-                  </div>
-            </div>
-
-            <div class="col s1"  id="cardholder">
-                
-                <div class="card blue-grey darken-1 z-depth-3">
-                    <div class="card-content white-text">
-                      <span class="card-title">Post Name</span>
-                      <p><i>Approved</i></p>
-                      <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Vero quaerat, doloremque incidunt veniam pariatur quis labore voluptate magni, necessitatibus numquam deserunt culpa exercitationem nostrum laborum illum iste neque. Quasi, modi!</p>
-                        <img style="margin-top: 20px; " class="responsive-img" src="../images/pexels-barbland-28260049.jpg" alt="Blueberry Pancake">
-                    </div>
-                  </div>
-            </div>
-
-            <div class="col s1"  id="cardholder">
-                <div class="card blue-grey darken-1 z-depth-3" >
-                    <div class="card-content white-text">
-                      <span class="card-title">Post Name</span>
-                      <p><i>Pending</i></p>
-                      <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Vero quaerat, doloremque incidunt veniam pariatur quis labore voluptate magni, necessitatibus numquam deserunt culpa exercitationem nostrum laborum illum iste neque. Quasi, modi!</p>
-                        <img style="margin-top: 20px; " class="responsive-img" src="../images/pexels-barbland-28260049.jpg" alt="Blueberry Pancake">
-                    </div>
-                  </div>
-            </div>
-
-            <div class="col s1"  id="cardholder">
-                
-                <div class="card blue-grey darken-1 z-depth-3">
-                    <div class="card-content white-text">
-                      <span class="card-title">Post Name</span>
-                      <p><i>Approved</i></p>
-                      <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Vero quaerat, doloremque incidunt veniam pariatur quis labore voluptate magni, necessitatibus numquam deserunt culpa exercitationem nostrum laborum illum iste neque. Quasi, modi!</p>
-                        <img style="margin-top: 20px; " class="responsive-img" src="../images/pexels-barbland-28260049.jpg" alt="Blueberry Pancake">
-                    </div>
-                  </div>
-            </div>
+        <div class="grid" id="pendingPosts">
+            
         </div>
     </section>
+
+    <div class="row alertCard" id="alert" style="display: none;">
+      <div class="col s12 m6">
+        <div class="card blue-grey darken-1">
+          <div class="card-content white-text">
+            <span class="card-title">You are back online!</span>
+            <p>Syncing data to server from cache, please wait while this works!</p>
+          </div>
+          <div class="card-action">
+            <a id="okbutton">Ok</a>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <script>
         var sidenavtrigger = document.querySelector('.sidenav-trigger');
