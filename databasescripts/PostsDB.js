@@ -14,7 +14,7 @@ import {
 
 //For our alert system for syncing
 const okButton = document.getElementById('okbutton')
-const alert = document.getElementById('alert')
+const alertBox = document.getElementById('alert')
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -53,7 +53,7 @@ indexDB.addEventListener("upgradeneeded", (event) => {
 });
 
 okButton.addEventListener('click', () => {
-    alert.style.display = 'none'
+    alertBox.style.display = 'none'
 })
 
 
@@ -63,9 +63,9 @@ window.addEventListener("DOMContentLoaded", ()=> {
 
 window.addEventListener("online", ()=> {
     // Show the alert for 5 seconds. To alert the user that IndexDB is syncing with Firebase
-    alert.style.display = 'block'
+    alertBox.style.display = 'block'
     setTimeout(() => {
-        alert.style.display = 'none'
+        alertBox.style.display = 'none'
     }, 5000)
     syncronizeFirebaseToIndexedDB()
 })
