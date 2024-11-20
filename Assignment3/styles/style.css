@@ -1,0 +1,75 @@
+/* Login Page */
+body {
+    margin: 0;
+    /* overflow: hidden; */
+    position: relative;
+    
+}
+.loginBody::before {
+    content: '';
+    position: absolute;
+    filter: brightness(60%) blur(5px);
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-image: url(../images/pexels-pixabay-302769.jpg);
+    z-index: -1;
+}
+.loginBody {
+    padding: 20px;
+}
+#loginSection {
+    background-color: rgba(255, 255, 255, 1);
+    padding: 20px !important;
+    border-radius: 40px;
+}
+.loginFlex {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+
+
+/* Misc Utils */
+.textShadow {
+    text-shadow: 2px 3px 5px rgba(0, 0, 0, 0.8);
+}
+
+header {
+    height: 100px;
+}
+
+header h2 {
+    margin: 0;
+    padding: 0;
+    font-size: large;
+}
+
+.fhYellow {
+    background-color: #F9BE1E !important;
+}
+.fhYellowText {
+    color: #F9BE1E !important;
+}
+@media screen and (max-width: 900px) {
+    .loginFlex {
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    #adminNav h2 {
+        font-weight: bolder;
+        font-size: 2.6rem;
+    }
+
+    #loginButton {
+        width: 130px;
+        height: 60px;
+    }
+
+    
+    
+}
