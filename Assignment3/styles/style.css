@@ -31,12 +31,6 @@ body {
     height: 100vh;
 }
 
-.alertCard {
-    position: sticky;
-     bottom: 0; 
-     z-index: 5;
-}
-
 
 
 /* Misc Utils */
