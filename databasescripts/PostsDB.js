@@ -56,8 +56,8 @@ okButton.addEventListener('click', () => {
     alert.style.display = 'none'
 })
 
+
 window.addEventListener("DOMContentLoaded", ()=> {
-    console.log("DOM Content Loaded");
     loadAllDataFromDatabase();
 })
 
@@ -88,7 +88,7 @@ function updatePostsUI() {
             }
             // Admin View UI. To make sure that each button is unique, I put the ID in the button's ID.
             postElement.innerHTML = `
-        <div class="card blue-grey darken-1 z-depth-3">
+        <div class="card cardHeight blue-grey darken-1 z-depth-3">
                     <div class="card-content white-text">
                       <span class="card-title">${post.title}</span>
                       <p>${post.content}</p>
@@ -118,6 +118,10 @@ function updatePostsUI() {
             updatePostsUI()
         })
         } else {
+            // TODO Make sure that the post IS THE user that's logged in.             
+            if(post.userId != 1 || post.userId != "1") {
+                return;
+            }
             //Student's Post View
             postElement.innerHTML = `
         <div class="col s1 cardholder">
@@ -148,10 +152,8 @@ function updatePostsUI() {
  * @param {string} userId 
  */
 export function createPost(title, content, date, isApproved, userId) {
-    console.log("Creating Post");
     
     const post = new Post(createUUID(), title, content, date, isApproved, userId)
-    console.log(post)
     allPosts.push(post)
     attemptToSavePosts(post)
 }
@@ -214,7 +216,6 @@ function loadAllDataFromDatabase() {
             });
             updatePostsUI()
 
-            console.log("Posts loaded from Firebase", allPosts)
         });
     }
 
@@ -223,10 +224,29 @@ function loadAllDataFromDatabase() {
 /**
  * @description This function runs if we come back online to make sure our Firebase & IndexedDB are in sync. 
  */
-function syncronizeFirebaseToIndexedDB() {    
+function syncronizeFirebaseToIndexedDB() {  
+    const db = getFirestore(app);
+    const postsCollection = collection(db, "posts");
+    getDocs(postsCollection).then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+            const post = doc.data();
+            post.id = doc.id;
+            const postClass = new Post(post.id, post.title, post.content, post.date, post.isApproved, post.userId);
+            if(!allPosts.find(thePost => thePost.id === postClass.id)) {
+                allPosts.push(postClass)
+            } else {
+                const postIndex = allPosts.findIndex(thePost => thePost.id === postClass.id)
+                allPosts[postIndex] = postClass
+            }
+            
+        });
+        updatePostsUI()
+
+    });
     allPosts.forEach(post => {
         pushOrUpdatePostToFirebase(post)
     })
+    
 }
 /**
  * @description When a post is passed into our function, it will check if first, we need to store it locally or not, then it will then go in and check if it exists, if it exists, update it, if isDeleting is true, Delete it. Else it adds it to our Databases.

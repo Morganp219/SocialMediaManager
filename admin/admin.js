@@ -9,9 +9,11 @@ var title = document.getElementById('titlePostTextArea')
 var content = document.getElementById('textarea1')
 
 
-submitButton.addEventListener('click', () => {
-    submit()
-})
+if(submitButton) {
+    submitButton.addEventListener('click', () => {
+        submit()
+    })
+}
 
 
 if(section) {

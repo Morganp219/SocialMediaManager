@@ -70,7 +70,7 @@ header div ul {
 .spacer {
     flex-grow: 1;
 }
-.card {
+.cardHeight {
     height: 800px;
 }
 .cardholder {

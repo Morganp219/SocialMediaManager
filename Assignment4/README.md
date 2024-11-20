@@ -1,6 +1,10 @@
 # SocialMediaManager
 Welcome to my PWA Prototype of the ADET @ Fort Hays Tech | NW Social Media Login I chose this project as it is something that I have been planning on doing for a while. 
 
+
+### I must have spaced on the individual folders for submission. I put assignment 3 & 4 in a folder. To keep my Github Pages continue to work, I have to leave the main working files in my root directory. If you need to see the commits: https://github.com/Morganp219/SocialMediaManager/tree/681560055297c8ebacdf994e8bd8fbfe86f746e7 (Commit #6815600 and lower)  Sorry for the inconvinence. I did not catch this mistake until this submission.
+
+
 To view the prototype, please use this URL: [https://morganp219.github.io/SocialMediaManager/index.html](https://morganp219.github.io/SocialMediaManager/)
 
 Logins:
@@ -11,6 +15,7 @@ Password: Admin
 To View the Student Side: 
 Username: Student
 Password: Student
+
 
 ### Implement Firebase and IndexedDB
 ##### Explain how Firebase and IndexedDB are integrated into your application.
