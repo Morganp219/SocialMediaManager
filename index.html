@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login | Social Media Manager ADET</title>
     <link rel="stylesheet" href="./styles/style.css">
-    <script defer src="main.js"></script>
+    <script defer src="./firebase.js" type="module"></script>
+    <script defer src="main.js" type="module"></script>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="./styles/materialize.min.css">
     <script src="./styles/materialize.min.js"></script>
@@ -14,6 +15,19 @@
 
 </head>
 <body class="loginImage center-align loginFlex row loginBody">
+  <div style="overflow: hidden; position: absolute; z-index: 999; display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100vw; height: 100vh;" id="installPrompt">
+    <div style="background-color: black; z-index: 1; width: 100vw; height: 100vh; opacity: 0.4; position: absolute;"></div>
+    <div style="background-color: white; z-index: 2; padding: 20px; width: 25vw;">
+      <h3>Install Social Media Manager</h3>
+      <p>Install this app on your phone for easy access anytime!</p>
+      <div style="display: flex; flex-direction: column; align-items: start; justify-content: start;">
+        <span style="display: flex;"> <p>1. Open the share menu: </p><img width="30" style="object-fit: contain; margin-left: 10px;" src="./images/share_icon.png" alt="Share Icon"></li>      </span>
+        <p>2. Tap "Add to Home Screen"</p>
+      </div>
+      <button style="margin-top: 20px;" class="btn waves-effect waves-light" id="closeInstallPromptBtn">Close</button>
+      
+    </div>
+  </div>
     <!-- Login Page -->
      <div id="loginText" class="s6 col">
         <h3 class="white-text textShadow">App Development & Emerging Technologies</h3>
@@ -21,15 +35,27 @@
      </div>
      <section id="loginSection" class="col s6 container center-align z-depth-4">
         <h4>Department Social Media Manager Login</h4>
-        <form action="" >
             <div class="input-field">
                 <input type="text" id="username" placeholder="Username">
             </div>
             <div class="input-field">
                 <input type="password" id="password" placeholder="Password">
             </div>
-            <button id="loginButton" class="btn waves-effect waves-light" type="submit">Login</button>
-        </form>
+            <button id="loginButton" class="btn waves-effect waves-light">Login</button>
      </section>
+
+     <div class="row alertCard" id="alert" style="display: none;">
+          <div class="col s12 m6">
+            <div class="card blue-grey darken-1">
+              <div class="card-content white-text">
+                <span class="card-title">You are back online!</span>
+                <p>Syncing data to server from cache, please wait while this works!</p>
+              </div>
+              <div class="card-action">
+                <a id="okbutton">Ok</a>
+              </div>
+            </div>
+          </div>
+        </div>
 </body>
 </html>

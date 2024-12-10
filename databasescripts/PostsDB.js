@@ -1,6 +1,5 @@
 //Post Database Control. To keep files clean, I will be splitting this into Posts & Users (Once auth gets added.)
-// Import the functions you need from the Firebase SDK
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+
 import {
   getFirestore,
   collection,
@@ -11,46 +10,13 @@ import {
   setDoc,
   doc,
 } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
-
+import { app, indexDB, indexedDBInstance} from "../firebase.js";
 //For our alert system for syncing
 const okButton = document.getElementById('okbutton')
 const alertBox = document.getElementById('alert')
 
-// Your web app's Firebase configuration
-const firebaseConfig = {
-    apiKey: "AIzaSyAudRMByz-KL_2hWf2Z8fVfiwGQKbL-Sms",
-    authDomain: "mobile-web-development-83086.firebaseapp.com",
-    projectId: "mobile-web-development-83086",
-    storageBucket: "mobile-web-development-83086.firebasestorage.app",
-    messagingSenderId: "515099643242",
-    appId: "1:515099643242:web:d81f3768fd452976ad2913"
-  };
-  
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-// Create IndexDB database named "Social_Media_PWA"
-const indexDB = window.indexedDB.open("socialmedia_pwa", 2)
-
-indexDB.addEventListener("error", console.error)
-var indexedDBInstance = null
-/**
- * For this project, I will be using a class to hold all of my Posts. 
- * @type {Post[]}
- */
 var allPosts = []
 
-indexDB.addEventListener("success", (event) => {
-    indexedDBInstance = event.target.result
-})
-
-indexDB.addEventListener("upgradeneeded", (event) => {
-    indexedDBInstance = event.target.result;
-    // We create a new object store if it does not exist. If it does not, create an Id key. Finally a place to store the JSON required. It's easier to store the full JSON and re-parse it.
-    if (!indexedDBInstance.objectStoreNames.contains("posts")) {
-        const postsStore = indexedDBInstance.createObjectStore("posts", { keyPath: "id" });
-        postsStore.createIndex("json", "json", { unique: false });
-    }
-});
 
 okButton.addEventListener('click', () => {
     alertBox.style.display = 'none'
@@ -100,6 +66,7 @@ function updatePostsUI() {
                     </div>
             </div>
         `
+        
         posts.appendChild(postElement)
         // Approve will hide the post from Admin's view, but will keep it in the database if needed. (U = Update)
         document.getElementById("approveCard_" + post.id).addEventListener('click', function() {

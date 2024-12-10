@@ -1,4 +1,6 @@
 import { createPost, getPosts} from '../databasescripts/PostsDB.js';
+import { attemptSignOut } from '../firebase.js';
+
 const content = document.getElementById('textarea1');
 const title = document.getElementById('titlePostTextArea');
 
@@ -14,3 +16,8 @@ document.getElementById("submitButton").addEventListener('click', () => {
     content.value = ""
 })
 
+document.querySelectorAll('.logoutButton').forEach(button => {
+    button.addEventListener('click', () => {
+        attemptSignOut()
+    })
+})

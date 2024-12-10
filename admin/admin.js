@@ -1,5 +1,7 @@
 import { createPost, deletePost, getPosts, updatePost } from '../databasescripts/PostsDB.js';
-;
+import { attemptSignOut } from '/firebase.js';
+
+
 var cardHolder = document.getElementById('cardholder');
 var section = document.getElementById('containerSection');
 var sidenavtrigger = document.querySelector('.sidenav-trigger');
@@ -14,7 +16,11 @@ if(submitButton) {
         submit()
     })
 }
-
+document.querySelectorAll('.logoutButton').forEach(element => {
+    element.addEventListener('click', () => {
+        attemptSignOut()
+    })
+});
 
 if(section) {
 
@@ -29,7 +35,6 @@ if(section) {
 if('serviceWorker' in navigator) {
     navigator.serviceWorker.register('../sw.js');
 }
-
 
 
 function changeScreenSize(isMobile) {
@@ -53,6 +58,8 @@ document.addEventListener('DOMContentLoaded', function() {
         instances[0].open();
     })
 });
+
+
 
 function submit() {
     console.log("Submit");

@@ -1,43 +1,72 @@
 const allPersons = document.getElementById("persons")
-const addPerson = document.getElementById("addUser")
+const addUser = document.getElementById("addUser")
+const fullName = document.getElementById("fullName")
+const email = document.getElementById("email")
+const password = document.getElementById("password")
+const adminCheck = document.getElementById("adminCheck")
+const saveBtn = document.getElementById("save_btn");
+import { app, auth, attemptSignOut } from "../firebase.js";
 
+
+import {createUserObject, attemptToSaveUser, clearIndexedDB} from "../databasescripts/AuthDB.js"
+import {getAuth, onAuthStateChanged, createUserWithEmailAndPassword} from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js'
+var isShowingUserForm = false
 allPersons.innerHTML = ""
+hideCreateUserForm()
 
-function createTempUsers() {
-    addUserProfile("Admin")
-    addUserProfile("Student")
-}
 
 // ID is temporary and will be replaced by the actual ID from Firebase Auth.
-addPerson.addEventListener('click', () => {
-    addUserProfile("Temp User")
+addUser.addEventListener('click', () => {
+    console.log("Add User");
+    isShowingUserForm = !isShowingUserForm
+    if(isShowingUserForm) {
+        showCreateUserForm()
+    } else {
+        hideCreateUserForm()
+    }
 })
-/**
- * @description This function is WIP. This will eventually take the User Object.
- * @param {string} name 
- */
-function addUserProfile(name) {
-    var uuid = createUUID();
-    const person = document.createElement("div")
-    person.innerHTML = `<div class="card blue-grey darken-1 userCard">
-                <div class="card-content white-text">
-                    <img src="../images/pexels-personone.jpg" alt="Person One" class="responsive-img circle">
-                  <span class="card-title">${name}</span>
-                </div>
-                <div class="card-action">
-                  <a href="#" id="user_${uuid}">Delete</a>
-                </div>
-              </div>`
-    allPersons.appendChild(person)
-    document.getElementById(`user_${uuid}`).addEventListener('click', () => {
-        const con = confirm("Are you sure you want to delete this user?")
-        if(con) {
-            allPersons.removeChild(person)
+console.log("Loading Save Button");
+
+saveBtn.addEventListener("click", ()=>{
+    console.log("Save");
+    
+    if(adminCheck.checked) {
+        console.log("Checked");
+    }
+    console.log(`Full name ${fullName.value} Email ${email.value} Password ${password.value}`);
+    createUserWithLogin(email.value, password.value)
+})
+document.querySelectorAll('.logoutButton').forEach(element => {
+    element.addEventListener('click', () => {
+        attemptSignOut()
+    })
+});
+
+function showCreateUserForm() {
+    document.getElementById("userForm").style.display = "block"
+}
+function hideCreateUserForm() {
+    document.getElementById("userForm").style.display = "none"
+}
+
+
+function createUserWithLogin(email, password) {
+    createUserWithEmailAndPassword(auth, email, password).then((userCred)=> {
+        const user = userCred.user
+        console.log(user);
+        const userObject = createUserObject(user.uid, fullName.value, email, adminCheck.checked, Date.now())
+        console.log(userObject);
+        attemptToSaveUser(userObject)
+
+    }).catch((err)=> {
+        if(err.code == "auth/email-already-in-use") {
+           alert("Email already in use") 
         }
+        console.log(err);
+
     })
 }
 
-createTempUsers()
 
 /**
  * @description This function creates a temporary UUID in case Firebase is not available. To the most part this is only used when offline.
