@@ -1,5 +1,5 @@
 import { createPost, getPosts} from '../databasescripts/PostsDB.js';
-import { attemptSignOut } from '../firebase.js';
+import { attemptSignOut, currentUser } from '../firebase.js';
 
 const content = document.getElementById('textarea1');
 const title = document.getElementById('titlePostTextArea');
@@ -11,7 +11,7 @@ if('serviceWorker' in navigator) {
 }
 
 document.getElementById("submitButton").addEventListener('click', () => {
-    createPost(title.value, content.value, new Date(), false, "1")
+    createPost(title.value, content.value, new Date(), false, currentUser.id)
     title.value = ""
     content.value = ""
 })

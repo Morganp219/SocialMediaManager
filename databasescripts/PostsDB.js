@@ -10,7 +10,7 @@ import {
   setDoc,
   doc,
 } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
-import { app, indexDB, indexedDBInstance} from "../firebase.js";
+import { app, currentUser, indexDB, indexedDBInstance} from "../firebase.js";
 //For our alert system for syncing
 const okButton = document.getElementById('okbutton')
 const alertBox = document.getElementById('alert')
@@ -24,7 +24,10 @@ okButton.addEventListener('click', () => {
 
 
 window.addEventListener("DOMContentLoaded", ()=> {
-    loadAllDataFromDatabase();
+    // Ensure that firebase has had time to load the user.
+    setTimeout(()=> {
+        loadAllDataFromDatabase();
+    }, 1000)
 })
 
 window.addEventListener("online", ()=> {
@@ -33,8 +36,18 @@ window.addEventListener("online", ()=> {
     setTimeout(() => {
         alertBox.style.display = 'none'
     }, 5000)
-    syncronizeFirebaseToIndexedDB()
+    // syncronizeFirebaseToIndexedDB()
 })
+
+function getUserDoc(userId) {
+    const doc = getDocs(collection(getFirestore(app), "Users"))
+    const userDoc = doc.then((querySnapshot) => {
+        return querySnapshot.docs.find(doc => doc.data().id === userId)
+    }).catch((error) => {
+        console.log("Error getting user document:", error);
+    })
+    return userDoc
+}
 
 /**
  * @description Force updates the Student & Admin previous posts. 
@@ -43,7 +56,7 @@ function updatePostsUI() {
     const posts = document.getElementById("pendingPosts")
     posts.innerHTML = ""
     // To keep stuff efficent, I will use a Foreach instead of a normal for loop to add all of the posts
-    allPosts.forEach(post => {
+    allPosts.forEach(async post => {
         
         const postElement = document.createElement("div")
         // Admins can only approve / deny posts. Students can only see their posts.
@@ -52,22 +65,42 @@ function updatePostsUI() {
             if(post.isApproved) {
                 return;
             }
-            // Admin View UI. To make sure that each button is unique, I put the ID in the button's ID.
+            console.log("Loading User Doc");
+            var title = ""
+                if(navigator.onLine) {
+                    var doc = await getUserDoc(post.userId)
+                    console.log("Loaded ");
+                
+                    console.log(doc);
+                    if(!doc) {
+                        title = "Unable to Load."
+                    }    else {
+                        const json = doc.data()
+                        title = json.fullname ?? json.username
+                    }     
+                    
+                }
+               
+                        
+                
+                // Admin View UI. To make sure that each button is unique, I put the ID in the button's ID.
             postElement.innerHTML = `
-        <div class="card cardHeight blue-grey darken-1 z-depth-3">
-                    <div class="card-content white-text">
-                      <span class="card-title">${post.title}</span>
-                      <p>${post.content}</p>
-                        <img style="margin-top: 20px;" class="responsive-img" src="../images/pexels-pixabay-270404.jpg" alt="Social Media Post ${post.title}">
-                    </div>
-                    <div class="card-action">
-                      <a id="approveCard_${post.id}">Approve</a>
-                      <a id="denyCard_${post.id}">Deny</a>
-                    </div>
-            </div>
-        `
-        
-        posts.appendChild(postElement)
+            <div class="card cardHeight blue-grey darken-1 z-depth-3">
+                        <div class="card-content white-text">
+                          <span class="card-title">${post.title}</span>
+                          <p>${post.content}</p>
+                            <img style="margin-top: 20px;" class="responsive-img" src="../images/pexels-pixabay-270404.jpg" alt="Social Media Post ${post.title}">
+                            <p><i>Poster: ${title}</i></p>
+                        </div>
+                        <div class="card-action">
+                          <a id="approveCard_${post.id}">Approve</a>
+                          <a id="denyCard_${post.id}">Deny</a>
+                        </div>
+                </div>
+            `
+            
+            posts.appendChild(postElement)
+           
         // Approve will hide the post from Admin's view, but will keep it in the database if needed. (U = Update)
         document.getElementById("approveCard_" + post.id).addEventListener('click', function() {
             alert('Approved, Submitting to Social Media');
@@ -85,8 +118,9 @@ function updatePostsUI() {
             updatePostsUI()
         })
         } else {
-            // TODO Make sure that the post IS THE user that's logged in.             
-            if(post.userId != 1 || post.userId != "1") {
+            console.log(currentUser);
+            
+            if(post.userId != currentUser.id) {
                 return;
             }
             //Student's Post View
@@ -158,12 +192,18 @@ function attemptToSavePosts(post) {
  * @description Load all of the data from the database. If offline, load from IndexedDB. If online, load from Firebase.
  */
 function loadAllDataFromDatabase() {
+    console.log(navigator.onLine);
+    
     if(!navigator.onLine) {
+        console.log("Loading from IndexedDB");
+        
         const transaction = indexedDBInstance.transaction("posts", "readonly");
         const postsStore = transaction.objectStore("posts");
         const request = postsStore.getAll();
         request.addEventListener("success", (event) => {
             event.target.result.forEach(post => {
+                console.log(post);
+                
                 // With us saving the JSON to both Databases, we have to bring it out of JSON to the Post Object. Once finished on each, update the UI.
                 allPosts.push(new Post(post.id, post.title, post.content, post.date, post.isApproved, post.userId))
             })
@@ -180,6 +220,7 @@ function loadAllDataFromDatabase() {
                 post.id = doc.id;
                 const postClass = new Post(post.id, post.title, post.content, post.date, post.isApproved, post.userId);
                 allPosts.push(postClass)
+                pushOrUpdatePostToIndexedDB(postClass)
             });
             updatePostsUI()
 
@@ -205,10 +246,11 @@ function syncronizeFirebaseToIndexedDB() {
                 const postIndex = allPosts.findIndex(thePost => thePost.id === postClass.id)
                 allPosts[postIndex] = postClass
             }
+            pushOrUpdatePostToIndexedDB(postClass)
+            updatePostsUI()
             
         });
         updatePostsUI()
-
     });
     allPosts.forEach(post => {
         pushOrUpdatePostToFirebase(post)
@@ -263,6 +305,11 @@ function pushOrUpdatePostToFirebase(post, isDeleting = false) {
 function pushOrUpdatePostToIndexedDB(post, isDeleting = false) {
         const transaction = indexedDBInstance.transaction("posts", "readwrite");
         const postsStore = transaction.objectStore("posts");
+        if(allPosts.find(thePost => thePost.id === post.id)) {
+            const postIndex = allPosts.findIndex(thePost => thePost.id === post.id)
+            allPosts[postIndex] = post
+
+        }
 
         if (post.id) {
             if(isDeleting) {

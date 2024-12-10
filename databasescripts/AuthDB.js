@@ -27,10 +27,13 @@ window.addEventListener("online", ()=> {
     setTimeout(() => {
         alert.style.display = 'none'
     }, 5000)
+    syncronizeFirebaseToIndexedDB()
 })
 document.addEventListener('DOMContentLoaded', ()=> {
     if(!window.location.href.includes("index.html")) {
-        loadAllDataFromDatabase()
+        setTimeout(()=> {
+            loadAllDataFromDatabase()
+        }, 2000)
     }
 })
 
@@ -71,7 +74,7 @@ function updateUsersUI() {
                   if(con) {
                     // Once connected to server, delete Auth user and delete User from Firebase. 
                     // Without Server, unable to delete auth.
-                    alert("User Deleted")
+                    alert("Deleting User Coming Soon!")
                   }
               })
         usersContainer.appendChild(userElement)
@@ -80,6 +83,10 @@ function updateUsersUI() {
 
 function loadAllDataFromDatabase() {
     if(!navigator.onLine) {
+        if(!indexedDBInstance) {
+            console.error("IndexedDB not supported on this browser. Cannot load data.")
+            return
+        }
         const transaction = indexedDBInstance.transaction("Users", "readonly");
         const usersStore = transaction.objectStore("Users");
         const request = usersStore.getAll();
@@ -99,6 +106,7 @@ function loadAllDataFromDatabase() {
                 user.id = doc.id;
                 const userClass = new User(user.id, user.fullname, user.username, user.isAdmin, user.lastLoggedIn);
                 allUsers.push(userClass)
+                pushOrUpdateUserToIndexedDB(userClass)
             });
             updateUsersUI()
         });
@@ -112,6 +120,8 @@ function deleteUser(user) {
 
 function syncronizeFirebaseToIndexedDB() {
     const db = getFirestore(app);
+    console.log("Syncronizing Firebase to IndexedDB");
+    
     const usersCollection = collection(db, "users");
     
     getDocs(usersCollection).then((querySnapshot) => {
@@ -122,9 +132,11 @@ function syncronizeFirebaseToIndexedDB() {
             const userClass = new User(user.id, user.fullname, user.username, user.isAdmin, user.lastLoggedIn);
             if(!allUsers.find(theUser => theUser.id === userClass.id)) {
                 allUsers.push(userClass)
+                pushOrUpdateUserToIndexedDB(userClass)
             } else {
                 const userIndex = allUsers.findIndex(theUser => theUser.id === userClass.id)
                 allUsers[userIndex] = userClass
+                pushOrUpdateUserToIndexedDB(userClass)
             }
             
         });
@@ -159,6 +171,8 @@ function pushOrUpdateUserToFirebase(user, isDeleting = false) {
     if(!navigator.onLine) {
         return
     }
+    console.log("Pushing or Updating User to Firebase");
+    
     const db = getFirestore(app);
         const userCollection = collection(db, "Users");
         if (user.id) {
@@ -191,6 +205,8 @@ function pushOrUpdateUserToFirebase(user, isDeleting = false) {
 }
 
 function pushOrUpdateUserToIndexedDB(user, isDeleting = false) {
+    console.log("Pushing or Updating User to IndexedDB");
+    
     const transaction = indexedDBInstance.transaction("Users", "readwrite");
     const postsStore = transaction.objectStore("Users");
 

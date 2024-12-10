@@ -15,9 +15,9 @@
 
 </head>
 <body class="loginImage center-align loginFlex row loginBody">
-  <div style="overflow: hidden; position: absolute; z-index: 999; display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100vw; height: 100vh;" id="installPrompt">
+  <div style="display: none; overflow: hidden; position: absolute; z-index: 999;  flex-direction: column; justify-content: center; align-items: center; width: 100vw; height: 100vh;" id="installPrompt">
     <div style="background-color: black; z-index: 1; width: 100vw; height: 100vh; opacity: 0.4; position: absolute;"></div>
-    <div style="background-color: white; z-index: 2; padding: 20px; width: 25vw;">
+    <div style="background-color: white; z-index: 2; padding: 20px; width: 25vw; border-radius: 30px;" class="z-depth-5">
       <h3>Install Social Media Manager</h3>
       <p>Install this app on your phone for easy access anytime!</p>
       <div style="display: flex; flex-direction: column; align-items: start; justify-content: start;">
@@ -36,10 +36,10 @@
      <section id="loginSection" class="col s6 container center-align z-depth-4">
         <h4>Department Social Media Manager Login</h4>
             <div class="input-field">
-                <input type="text" id="username" placeholder="Username">
+                <input type="text" id="username" placeholder="Username" autocomplete="email">
             </div>
             <div class="input-field">
-                <input type="password" id="password" placeholder="Password">
+                <input type="password" id="password" placeholder="Password" autocomplete="current-password">
             </div>
             <button id="loginButton" class="btn waves-effect waves-light">Login</button>
      </section>

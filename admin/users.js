@@ -5,6 +5,8 @@ const email = document.getElementById("email")
 const password = document.getElementById("password")
 const adminCheck = document.getElementById("adminCheck")
 const saveBtn = document.getElementById("save_btn");
+const cancelBtn = document.getElementById("cancel_btn")
+const clickFormBackground = document.getElementById("clickFormBackground")
 import { app, auth, attemptSignOut } from "../firebase.js";
 
 
@@ -17,6 +19,10 @@ hideCreateUserForm()
 
 // ID is temporary and will be replaced by the actual ID from Firebase Auth.
 addUser.addEventListener('click', () => {
+    if(!navigator.onLine) {
+        alert("You are currently offline. Please connect to the internet to add a user.")
+        return
+    }
     console.log("Add User");
     isShowingUserForm = !isShowingUserForm
     if(isShowingUserForm) {
@@ -25,22 +31,23 @@ addUser.addEventListener('click', () => {
         hideCreateUserForm()
     }
 })
-console.log("Loading Save Button");
 
 saveBtn.addEventListener("click", ()=>{
-    console.log("Save");
-    
-    if(adminCheck.checked) {
-        console.log("Checked");
-    }
-    console.log(`Full name ${fullName.value} Email ${email.value} Password ${password.value}`);
     createUserWithLogin(email.value, password.value)
+})
+
+cancelBtn.addEventListener("click", ()=> {
+    hideCreateUserForm()
+})
+clickFormBackground.addEventListener("click", ()=> {
+    hideCreateUserForm()
 })
 document.querySelectorAll('.logoutButton').forEach(element => {
     element.addEventListener('click', () => {
         attemptSignOut()
     })
 });
+
 
 function showCreateUserForm() {
     document.getElementById("userForm").style.display = "block"
@@ -53,9 +60,7 @@ function hideCreateUserForm() {
 function createUserWithLogin(email, password) {
     createUserWithEmailAndPassword(auth, email, password).then((userCred)=> {
         const user = userCred.user
-        console.log(user);
         const userObject = createUserObject(user.uid, fullName.value, email, adminCheck.checked, Date.now())
-        console.log(userObject);
         attemptToSaveUser(userObject)
 
     }).catch((err)=> {
@@ -69,6 +74,7 @@ function createUserWithLogin(email, password) {
 
 
 /**
+ * @deprecated This function is no longer needed. Firebase IDs are the main ID for the user now.
  * @description This function creates a temporary UUID in case Firebase is not available. To the most part this is only used when offline.
  * @returns {string} Returns UUID
  */

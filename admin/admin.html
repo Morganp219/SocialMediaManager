@@ -11,7 +11,7 @@
     <script src="../styles/materialize.min.js"></script>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <meta name="theme-color" content="#F9BE1E">
-    <script defer src="../firebase.js" type="module"/>
+    <script defer src="../firebase.js" type="module"></script>
     <script defer src="./admin.js" type="module"></script>
     <script defer src="../databasescripts/PostsDB.js" type="module"></script>
     <link rel="manifest" href="../manifest.json">
@@ -28,7 +28,7 @@
             <h5 class="col s4 left">Social Media Manager</h5>
             <div class="">
                 <ul class="row s6">
-                    <li class=" navText" style="cursor: pointer;" onclick="signOut()">Logout</li>
+                    <li class=" navText logoutButton" style="cursor: pointer;" >Logout</li>
                     <!-- Implement Users during Final Once Firebase Auth is implemented. -->
                     <li class=" "><a class="navText" href="./users.html">Users</a></li>
                     <li class=" "><a class="navText" href="./admin.html">Home</a></li>
@@ -46,7 +46,7 @@
                 <h2 class="center-align white-text">Social Media Manager</h2>
                 <li class="col s2 right "><a class="navText white-text selected" href="./admin.html">Home</a></li>
                 <li class="col s2 right "><a class="navText" href="./users.html">Users</a></li>
-                <li class="col s2 right navText" style="cursor: pointer;" onclick="signOut()""><a class="navText" href="">Logout</a></li>
+                <li class="col s2 right navText logoutButton" style="cursor: pointer;"><a class="navText" href="">Logout</a></li>
             </ul>
             <a href="#" data-target="slide-out" class="sidenav-trigger black-text"><i class="material-icons">menu</i></a>
      </header>
@@ -56,7 +56,7 @@
             <div class="col s4"  id="cardholder">
                 <h4>Pending Posts</h4>
                 <div class="card blue-grey darken-1 z-depth-3" id="pendingPosts">
-                    
+                    <h4 style="color: white !important; padding: 15px;">No Posts Loaded.</h1>
                 </div>
 
                   
@@ -82,6 +82,7 @@
                       </div>
                     </div>
                   </form>
+                  
                   <button id="submitButton" class="btn waves-effect waves-light" type="submit" id="postSubmit">Submit for Approval!</button>
             </div>
         </section>

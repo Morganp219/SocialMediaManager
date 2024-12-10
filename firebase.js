@@ -23,22 +23,21 @@ export const app = initializeApp(firebaseConfig);
 export const auth = getAuth()
 export var currentUser
 // Create IndexDB database named "Social_Media_PWA"
-export const indexDB = window.indexedDB.open("socialmedia_pwa", 3)
+// TODO Go back to 4
+export var indexDB = window.indexedDB.open("socialmedia_pwa", 6)
 
 indexDB.addEventListener("error", console.error)
 export var indexedDBInstance = null
-/**
- * For this project, I will be using a class to hold all of my Posts. 
- * @type {Post[]}
- */
-var allPosts = []
+
+
+
 
 indexDB.addEventListener("success", (event) => {
     indexedDBInstance = event.target.result
 })
 
 indexDB.addEventListener("upgradeneeded", (event) => {
-    indexedDBInstance = event.target.result;
+    
     // We create a new object store if it does not exist. If it does not, create an Id key. Finally a place to store the JSON required. It's easier to store the full JSON and re-parse it.
     if (!indexedDBInstance.objectStoreNames.contains("posts")) {
         const postsStore = indexedDBInstance.createObjectStore("posts", { keyPath: "id" });
@@ -48,32 +47,37 @@ indexDB.addEventListener("upgradeneeded", (event) => {
         const usersStore = indexedDBInstance.createObjectStore("Users", { keyPath: "id" });
         usersStore.createIndex("json", "json", { unique: false });
     }
+    if(!indexedDBInstance.objectStoreNames.contains("currentUser")) {
+        const currentUserStore = indexedDBInstance.createObjectStore("currentUser", { keyPath: "id" });
+        currentUserStore.createIndex("json", "json", { unique: false });
+    }
 });
 
-console.log("Loading Auth State");
+console.log("Loading Authenication");
 
 document.addEventListener("DOMContentLoaded", () => {
     onAuthStateChanged(auth, (user) => {
-        console.log(user);
+        console.log("Auth State Changed");
+        
         if(user) {
             attemptToLoadUserFileFromFirebase(user).then((userClass) => {
                 currentUser = userClass
-                alert("You have been signed in")
             })
         } else {
-            console.log(window.location.href);
             
             if(!window.location.href.includes("index.html")) {
                 currentUser = null
-
                 attemptSignOut()
             }
         }
     })
 })
 
+
 export function attemptSignOut() {
     // alert("You have been signed out")
+    clearIndexedDB()
+    localStorage.removeItem("currentUser")
     auth.signOut();
     window.location.href = "../index.html"
 }
@@ -84,7 +88,6 @@ export function attemptToLogin(email, password) {
             
         }).then((userCred)=> {
             const user = userCred.user
-            console.log(user);
             attemptToLoadUserFileFromFirebase(user).then((userClass) => {
                 currentUser = userClass
                 if(currentUser.isAdmin) {
@@ -106,21 +109,37 @@ export function attemptToLogin(email, password) {
 
 function attemptToLoadUserFileFromFirebase(user) {
     return new Promise((resolve, reject) => {
+        console.log("Attempting to load user file from Firebase");
+        
         if(navigator.onLine) {
             const db = getFirestore(app);
-            const userCollection = collection(db, "Users");
             const userRef = doc(db, "Users", user.uid);
             getDoc(userRef).then((doc) => {
                 if (doc.exists()) {
                     const userData = doc.data();
                     userData.id = doc.id;
                     const userClass = new User(userData.id, userData.fullname, userData.username, userData.isAdmin, userData.lastLoggedIn);
+                    localStorage.setItem("currentUser", JSON.stringify(userClass))
                     resolve(userClass)
                 }
             });
         } else {
-            alert("You must be online to login")
-            reject()
+            attemptToGetFromLocalStorage().then((users) => {
+                console.log(users);
+                
+                const myUser = users
+                resolve(myUser)
+            }).catch(() => {
+                alert("You must be online to login")
+                // reject()
+            })
+            // reject()
         }
+    })
+}
+
+function attemptToGetFromLocalStorage() {
+    return new Promise((resolve, reject) => {
+        resolve(JSON.parse(localStorage.getItem("currentUser")))
     })
 }
