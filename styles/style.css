@@ -32,7 +32,7 @@ body {
 }
 
 .alertCard {
-    position: sticky;
+    position: sticky !important;
      bottom: 0; 
      z-index: 5;
 }

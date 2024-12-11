@@ -1,27 +1,26 @@
+// Imports
 import { createPost, deletePost, getPosts, updatePost } from '../databasescripts/PostsDB.js';
 import { attemptSignOut } from '/firebase.js';
 
-
-var cardHolder = document.getElementById('cardholder');
-var section = document.getElementById('containerSection');
-var sidenavtrigger = document.querySelector('.sidenav-trigger');
-
-var submitButton = document.getElementById('submitButton')
-var title = document.getElementById('titlePostTextArea')
-var content = document.getElementById('textarea1')
+// Document Elements
+const section = document.getElementById('containerSection');
+const sidenavtrigger = document.querySelector('.sidenav-trigger');
+const submitButton = document.getElementById('submitButton')
+const title = document.getElementById('titlePostTextArea')
+const content = document.getElementById('textarea1')
 
 
+// Implementation of Service Worker
+if('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('../sw.js');
+}
+
+// If needed on the page checks. (If the document element is not undefined.)
 if(submitButton) {
     submitButton.addEventListener('click', () => {
         submit()
     })
 }
-document.querySelectorAll('.logoutButton').forEach(element => {
-    element.addEventListener('click', () => {
-        attemptSignOut()
-    })
-});
-
 if(section) {
 
     changeScreenSize(window.matchMedia("(max-width: 900px)").matches);
@@ -29,14 +28,28 @@ if(section) {
         changeScreenSize(e.matches);
     }
 }
+// Setup Logout Button
+document.querySelectorAll('.logoutButton').forEach(element => {
+    element.addEventListener('click', () => {
+        attemptSignOut()
+    })
+});
 
-// Implementation of Service Worker
+// Sidebar setup
+document.addEventListener('DOMContentLoaded', function() {
+    var sidenav = document.querySelectorAll('.sidenav');
+    var instances = M.Sidenav.init(sidenav, {
+        edge: 'left',
+        draggable: true
+    });
+    sidenavtrigger.addEventListener('click', function() {
+        instances[0].open();
+    })
+});
 
-if('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('../sw.js');
-}
 
 
+// Change from Row to Column based on screen size.
 function changeScreenSize(isMobile) {
     if(isMobile) {
         section.classList.remove('row')
@@ -47,25 +60,11 @@ function changeScreenSize(isMobile) {
     }
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-    var sidenav = document.querySelectorAll('.sidenav');
-    var instances = M.Sidenav.init(sidenav, {
-        edge: 'left',
-        draggable: true
-    });
-    // instances[0].open();
-    sidenavtrigger.addEventListener('click', function() {
-        instances[0].open();
-    })
-});
-
-
-
-
 function submit() {
-    console.log("Submit");
-    
     createPost(title.value, content.value, new Date(), false, "1")
     title.value = ""
     content.value = ""
 }
+
+
+

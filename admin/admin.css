@@ -1,3 +1,4 @@
+/* Admin & User HTML CSS */
 @import url(https://fonts.googleapis.com/icon?family=Material+Icons);
 body {
     height: 100vh;
@@ -11,6 +12,13 @@ header {
     justify-content: space-between;
     padding: 20px;
     height: 150px !important;
+}
+#containerSection {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center; 
+    gap: 20px; 
 }
 .center {
     display: flex;
@@ -116,9 +124,31 @@ textarea {
     align-items: center;
     gap: 20px;
 }
-@media screen and (max-width: 1000px) {
-    #cardholder {
-         overflow-y: visible; 
-         height: auto;
-    }
+main {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+#containerSection {
+    display: flex;
+    flex-direction: row-reverse;
+    flex-wrap: wrap;
+    justify-content: center; 
+    gap: 20px; 
+}
+#cardholder {
+        overflow-y: visible; 
+        height: auto;
+        width: 300px;
+}
+#cardholder img {
+    width: 100px;
+    height: 100px;
+}
+main {
+    display: flex;
+    flex-direction: column !important;
+    align-items: center;
 }

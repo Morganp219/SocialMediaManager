@@ -1,4 +1,6 @@
+// Imports
 import {attemptToLogin, attemptSignOut} from './firebase.js'
+// Variables
 var loginText = document.getElementById('loginText');
 var loginSection = document.getElementById('loginSection');
 
@@ -7,13 +9,8 @@ var password = document.getElementById('password');
 var loginButton = document.getElementById('loginButton');
 var isShowingInstallPrompt = false
 
-
-
-changeScreenSize(window.matchMedia("(max-width: 900px)").matches);
-window.matchMedia("(max-width: 900px)").onchange = function (e) {
-    changeScreenSize(e.matches);
-}
-
+// Event Listeners
+// Login Button 
 loginButton.addEventListener('click', function(e) {    
     e.preventDefault()
     if(!navigator.onLine) {
@@ -28,15 +25,17 @@ loginButton.addEventListener('click', function(e) {
     
     attemptToLogin(username.value, password.value)
 });
+
 // Implementation of Service Worker
 if('serviceWorker' in navigator) {
     navigator.serviceWorker.register('./sw.js');
 }
 
-loginSection.addEventListener('click', (e)=> {
-    e.preventDefault();
-})
-
+// Change the screen size based on the window size.
+changeScreenSize(window.matchMedia("(max-width: 900px)").matches);
+window.matchMedia("(max-width: 900px)").onchange = function (e) {
+    changeScreenSize(e.matches);
+}
 function changeScreenSize(isMobile) {
     if(isMobile) {
         loginText.classList.remove('col', 's6')
@@ -48,7 +47,7 @@ function changeScreenSize(isMobile) {
         loginSection.classList.remove('s12')
     }
 }
-
+// Installation Prompt
 window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     const installPrompt = document.getElementById('installPrompt');
@@ -74,13 +73,11 @@ window.addEventListener('beforeinstallprompt', (e) => {
         closeInstallPrompt()
     })
 })
-
+// Close window if app is installed
 window.addEventListener('appinstalled', (e) => {
-    const installPrompt = document.getElementById('installPrompt');
-    installPrompt.style.display = 'none';
-    isShowingInstallPrompt = false;
+    closeInstallPrompt()
 })
-
+// Close Install Window.
 function closeInstallPrompt() {
     const installPrompt = document.getElementById('installPrompt');
     installPrompt.style.display = 'none';

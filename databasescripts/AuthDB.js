@@ -1,22 +1,15 @@
-//TODO: Add User Authentication. For the Final. This will follow the same logic as PostsDB.
-// // Objects
-import {
-    getFirestore,
-    collection,
-    addDoc,
-    getDocs,
-    deleteDoc,
-    updateDoc,
-    setDoc,
-    doc,
-  } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
-  import { app, indexDB, indexedDBInstance, auth} from "../firebase.js";
+//User Database Control.
+// Imports
+import { getFirestore, collection, addDoc, getDocs, deleteDoc, setDoc, doc,} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+import { app, indexDB, indexedDBInstance, auth, initializeIndexedDB} from "../firebase.js";
 
-  //For our alert system. Users does not effect the functionality of the application in offline/online yet.
+//Variables
 const okButton = document.getElementById('okbutton')
 const alert = document.getElementById('alert')
+var sidenavtrigger = document.querySelector('.sidenav-trigger');
 var allUsers = []
 
+// Event Listeners
 okButton.addEventListener('click', () => {
     alert.style.display = 'none'
 })
@@ -29,30 +22,46 @@ window.addEventListener("online", ()=> {
     }, 5000)
     syncronizeFirebaseToIndexedDB()
 })
+
+// Setup Sidebar, and Load Data From Databases
 document.addEventListener('DOMContentLoaded', ()=> {
+
+    var sidenav = document.querySelectorAll('.sidenav');
+    var instances = M.Sidenav.init(sidenav, {
+        edge: 'left',
+        draggable: true
+    });
+    sidenavtrigger.addEventListener('click', function() {
+        instances[0].open();
+    })
     if(!window.location.href.includes("index.html")) {
         setTimeout(()=> {
             loadAllDataFromDatabase()
-        }, 2000)
+        }, 500)
     }
 })
 
+// Helper Function that creates a User Object
 export function createUserObject(id, fullname, username, isAdmin, lastLoggedIn) {
     return new User(id, fullname, username, isAdmin, lastLoggedIn)
 }
-
+// Resets the IndexedDB Database
 export function clearIndexedDB() {
-    const transaction = indexedDBInstance.transaction("Users", "readwrite");
-    const usersStore = transaction.objectStore("Users");
-    usersStore.clear();
+    initializeIndexedDB().then(()=> {
+        const transaction = indexedDBInstance.transaction("Users", "readwrite");
+        const usersStore = transaction.objectStore("Users");
+        usersStore.clear();
+    })
 }
 
-
+/**
+ * 
+ * @description Updates the UsersUI (When on the Users.html page) with the allUsers array. Adds a delete button to each user with their IDs.
+ */
 function updateUsersUI() {
     if(!window.location.href.includes("users.html")) {
         return
     }
-    console.log("Update Users UI, Users: ", allUsers);
     
     const usersContainer = document.getElementById("persons")
     usersContainer.innerHTML = ""
@@ -80,23 +89,29 @@ function updateUsersUI() {
         usersContainer.appendChild(userElement)
     })
 }
-
+/**
+ * 
+ * @description If the user is offline, load all data from IndexedDB. else try to load all data from Firebase. Sets the allUsers array.
+ */
 function loadAllDataFromDatabase() {
     if(!navigator.onLine) {
+        initializeIndexedDB().then(()=> {
+            const transaction = indexedDBInstance.transaction("Users", "readonly");
+            const usersStore = transaction.objectStore("Users");
+            const request = usersStore.getAll();
+            request.addEventListener("success", (event) => {
+                event.target.result.forEach(user => {
+                    // With us saving the JSON to both Databases, we have to bring it out of JSON to the Post Object. Once finished on each, update the UI.
+                    allUsers.push(new User(user.id, user.fullname, user.username, user.isAdmin, user.lastLoggedIn))
+                })
+                updateUsersUI()
+            })
+        })
         if(!indexedDBInstance) {
             console.error("IndexedDB not supported on this browser. Cannot load data.")
             return
         }
-        const transaction = indexedDBInstance.transaction("Users", "readonly");
-        const usersStore = transaction.objectStore("Users");
-        const request = usersStore.getAll();
-        request.addEventListener("success", (event) => {
-            event.target.result.forEach(user => {
-                // With us saving the JSON to both Databases, we have to bring it out of JSON to the Post Object. Once finished on each, update the UI.
-                allUsers.push(new User(user.id, user.fullname, user.username, user.isAdmin, user.lastLoggedIn))
-            })
-            updateUsersUI()
-        })
+        
     } else {
         const db = getFirestore(app);
         const usersCollection = collection(db, "Users");
@@ -112,23 +127,21 @@ function loadAllDataFromDatabase() {
         });
     }
 }
-
+// TODO: Once server is connected, wire this.
 function deleteUser(user) {
     pushOrUpdateUserToFirebase(user, true)
     pushOrUpdateUserToIndexedDB(user, true)
 }
-
+// Syncronize Firebase to IndexedDB
 function syncronizeFirebaseToIndexedDB() {
-    const db = getFirestore(app);
-    console.log("Syncronizing Firebase to IndexedDB");
-    
+    const db = getFirestore(app);    
     const usersCollection = collection(db, "users");
     
     getDocs(usersCollection).then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
             const user = doc.data();
             user.id = doc.id;
-
+            // Check if the user is already in the allUsers array. If not, add it. If it is, update it. Once finished update the indexedDB.
             const userClass = new User(user.id, user.fullname, user.username, user.isAdmin, user.lastLoggedIn);
             if(!allUsers.find(theUser => theUser.id === userClass.id)) {
                 allUsers.push(userClass)
@@ -138,40 +151,29 @@ function syncronizeFirebaseToIndexedDB() {
                 allUsers[userIndex] = userClass
                 pushOrUpdateUserToIndexedDB(userClass)
             }
-            
         });
+        // Once Finished, update the UI.
         updateUsersUI()
-
     });
 }
-
-
-function syncronizeIndexedDBToFirebase() {
-    const transaction = indexedDBInstance.transaction("Users", "readonly");
-    const usersStore = transaction.objectStore("Users");
-    const request = usersStore.getAll();
-    request.addEventListener("success", (event) => {
-        event.target.result.forEach(user => {
-            pushOrUpdateUserToFirebase(user)
-        })
-    })
-}
-
+/**
+ * @description Tries to update or set the user to both Databases.
+ * @param {User} user 
+ */
 export function attemptToSaveUser(user) {
     pushOrUpdateUserToFirebase(user)
     pushOrUpdateUserToIndexedDB(user)
 }
 /**
- * 
+ * @description Sets the user to Firebase. If the user has an ID, it updates the user. If not, it adds the user.
  * @param {User} user 
- * @param {boolean} isDeleting 
+ * @param {boolean} isDeleting This variable tells Firebase to delete the doc if needed.
  * @returns 
  */
 function pushOrUpdateUserToFirebase(user, isDeleting = false) {
     if(!navigator.onLine) {
         return
     }
-    console.log("Pushing or Updating User to Firebase");
     
     const db = getFirestore(app);
         const userCollection = collection(db, "Users");
@@ -203,19 +205,23 @@ function pushOrUpdateUserToFirebase(user, isDeleting = false) {
                 });
         }
 }
-
+// Same as firebase, but for IndexedDB
 function pushOrUpdateUserToIndexedDB(user, isDeleting = false) {
     console.log("Pushing or Updating User to IndexedDB");
     
-    const transaction = indexedDBInstance.transaction("Users", "readwrite");
-    const postsStore = transaction.objectStore("Users");
+    initializeIndexedDB().then(()=> {
 
+    
+    const transaction = indexedDBInstance.transaction("Users", "readwrite");
+    if(!transaction) {
+        console.error("Transaction not created");
+        return
+    }
+    const postsStore = transaction.objectStore("Users");
+    // Log out the errors if needed.
     if (user.id) {
         if(isDeleting) {
             const request = postsStore.delete(user.id);
-            request.addEventListener("success", ()=> {
-                // updatePostsUI()
-            })
             request.addEventListener("error", (event)=> {
                 console.error("Error deleting user in IndexedDB:", event.target.error);
             })
@@ -224,19 +230,14 @@ function pushOrUpdateUserToIndexedDB(user, isDeleting = false) {
             request.addEventListener("error", (event)=> {
                 console.error("Error updating user in IndexedDB:", event.target.error);
             })
-            request.addEventListener("success", ()=> {
-                // updatePostsUI()
-            })
         }
     } else {
         const request = postsStore.add(user.toJSON());
         request.addEventListener("error", (event)=> {
             console.error("Error updating user in IndexedDB:", event.target.error);
         })
-        request.addEventListener("success", ()=> {
-            // updatePostsUI()
-        })
     }
+    })
 }
 
 
@@ -255,7 +256,10 @@ export class User {
         this.username = username
         this.lastLoggedIn = lastLoggedIn
     }
-
+    /**
+     * 
+     * @returns {{id: string, fullname: string, username: string, isAdmin: boolean, lastLoggedIn: Date}} JSON Object
+     */
     toJSON() {
         return {
             "id": this.id,

@@ -1,3 +1,4 @@
+// Service Worker
 self.addEventListener("install", event => {
     console.log("Service worker installed");
     const installCache = () => {
@@ -61,6 +62,7 @@ self.addEventListener("install", event => {
  self.addEventListener("fetch", event => {
     event.respondWith(
         (async () => {
+            // Prevent POST requests from being cached. (Firebase)
             if(event.request.method !== "GET") {
                 if(navigator.onLine) {
                     return fetch(event.request);

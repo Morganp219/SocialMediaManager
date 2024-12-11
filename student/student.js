@@ -9,7 +9,7 @@ const title = document.getElementById('titlePostTextArea');
 if('serviceWorker' in navigator) {
     navigator.serviceWorker.register('../sw.js');
 }
-
+// Attempts to post and reset the form
 document.getElementById("submitButton").addEventListener('click', () => {
     createPost(title.value, content.value, new Date(), false, currentUser.id)
     title.value = ""
@@ -18,6 +18,8 @@ document.getElementById("submitButton").addEventListener('click', () => {
 
 document.querySelectorAll('.logoutButton').forEach(button => {
     button.addEventListener('click', () => {
+        console.log("Logout");
+        
         attemptSignOut()
     })
 })

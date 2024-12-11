@@ -1,3 +1,8 @@
+// Imports
+import { app, auth, attemptSignOut } from "../firebase.js";
+import {createUserObject, attemptToSaveUser, clearIndexedDB} from "../databasescripts/AuthDB.js"
+import {getAuth, onAuthStateChanged, createUserWithEmailAndPassword} from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js'
+// Document Elements
 const allPersons = document.getElementById("persons")
 const addUser = document.getElementById("addUser")
 const fullName = document.getElementById("fullName")
@@ -7,23 +12,21 @@ const adminCheck = document.getElementById("adminCheck")
 const saveBtn = document.getElementById("save_btn");
 const cancelBtn = document.getElementById("cancel_btn")
 const clickFormBackground = document.getElementById("clickFormBackground")
-import { app, auth, attemptSignOut } from "../firebase.js";
 
-
-import {createUserObject, attemptToSaveUser, clearIndexedDB} from "../databasescripts/AuthDB.js"
-import {getAuth, onAuthStateChanged, createUserWithEmailAndPassword} from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js'
+// Variables
 var isShowingUserForm = false
 allPersons.innerHTML = ""
+
+// Hide Create Form (If visible)
 hideCreateUserForm()
 
-
-// ID is temporary and will be replaced by the actual ID from Firebase Auth.
+// Show/Hide the Create Form
 addUser.addEventListener('click', () => {
     if(!navigator.onLine) {
+        // Limitation of Firebase. Cannot create a user offline.
         alert("You are currently offline. Please connect to the internet to add a user.")
         return
     }
-    console.log("Add User");
     isShowingUserForm = !isShowingUserForm
     if(isShowingUserForm) {
         showCreateUserForm()
@@ -48,7 +51,7 @@ document.querySelectorAll('.logoutButton').forEach(element => {
     })
 });
 
-
+// Helper Functions of the Create Form.
 function showCreateUserForm() {
     document.getElementById("userForm").style.display = "block"
 }
@@ -56,7 +59,11 @@ function hideCreateUserForm() {
     document.getElementById("userForm").style.display = "none"
 }
 
-
+/**
+ * @description Creates a new User with Firebase, then creates the user object, finally attempts to save the user.
+ * @param {string} email 
+ * @param {string} password 
+ */
 function createUserWithLogin(email, password) {
     createUserWithEmailAndPassword(auth, email, password).then((userCred)=> {
         const user = userCred.user
@@ -64,21 +71,14 @@ function createUserWithLogin(email, password) {
         attemptToSaveUser(userObject)
 
     }).catch((err)=> {
+        // Throw an alert if the email is already in use.
         if(err.code == "auth/email-already-in-use") {
            alert("Email already in use") 
+        }
+        if(err.code == "auth/invalid-credential") {
+            alert("Invalid Email or Password, Please Try Again.")
         }
         console.log(err);
 
     })
-}
-
-
-/**
- * @deprecated This function is no longer needed. Firebase IDs are the main ID for the user now.
- * @description This function creates a temporary UUID in case Firebase is not available. To the most part this is only used when offline.
- * @returns {string} Returns UUID
- */
-function createUUID() {
-    var letters = "abcdefghijklmnopqrstuvwxyz";
-    return letters[Math.floor(Math.random() * letters.length)] + Date.now();
 }
