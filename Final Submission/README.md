@@ -3,14 +3,6 @@ Welcome to my PWA Prototype of the ADET @ Fort Hays Tech | NW Social Media Login
 
 To view the prototype, please use this URL: [https://morganp219.github.io/SocialMediaManager/index.html](https://morganp219.github.io/SocialMediaManager/)
 
-Logins:
-To View the Admin Side:
-Username: m_pritchard@mail.fhsu.edu
-Password: admin123
-
-To View the Student Side: 
-Username: morgan.pritchard@nwktc.edu
-Password: student123
 
 ## Previous READMEs
 
