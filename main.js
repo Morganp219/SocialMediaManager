@@ -49,7 +49,7 @@ function changeScreenSize(isMobile) {
 }
 // Installation Prompt
 window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault();
+    // e.preventDefault();
     const installPrompt = document.getElementById('installPrompt');
     console.log("Install Prompt");
     
