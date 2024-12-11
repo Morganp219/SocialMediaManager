@@ -1,6 +1,6 @@
 // Imports
 import { createPost, deletePost, getPosts, updatePost } from '../databasescripts/PostsDB.js';
-import { attemptSignOut } from '/firebase.js';
+import { attemptSignOut } from '../firebase.js';
 
 // Document Elements
 const section = document.getElementById('containerSection');
