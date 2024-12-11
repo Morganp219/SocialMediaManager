@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Editor | Social Media Manager ADET</title>
+    <link rel="stylesheet" href="./admin.css">
+    <link rel="stylesheet" href="../styles/style.css">
+    <link rel="stylesheet" href="../styles/materialize.min.css">
+    <script src="../styles/materialize.min.js"></script>
+    <meta name="theme-color" content="#F9BE1E">
+    <link rel="manifest" href="../manifest.json">
+    <link rel="shortcut icon" href="../images/icon.png" type="image/x-icon">
+
+
+</head>
+<body style="margin: 0; padding: 0;">
+  <div id="userForm" style="position: absolute; z-index: 999;">
+    <div id="clickFormBackground" style="background-color: black; color: white; width: 100vw; height: 100vh; opacity: 0.7;"></div>
+    <div style="width: 40vw; height: 50vh; background-color: white; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); padding: 20px;">
+      <h1 style="font-size: 2em;">User Registration Form</h1>
+      <div class="input-field col s6">
+        <input placeholder="Placeholder" id="fullName" type="text" class="validate">
+        <label for="first_name">Full Name</label>
+      </div>
+      <div class="input-field col s6">
+        <input id="email" placeholder="Placeholder" id="first_name" type="text" class="validate">
+        <label for="first_name">Email</label>
+      </div>
+      <div class="input-field col s6">
+        <input id="password" placeholder="Placeholder" id="first_name" type="text" class="validate">
+        <label for="first_name">Password</label>
+      </div>
+      <p>
+        <label>
+          <input id="adminCheck" type="checkbox" />
+          <span>Administrator?</span>
+        </label>
+      </p>
+      <a id="save_btn" class="waves-effect waves-light btn">Save</a>
+      <a id="cancel_btn" class="waves-effect waves-light btn">Cancel</a>
+     </div>
+   </div>
+   
+    <!-- Admin Page -->
+    <!-- Desktop Header -->
+    <header class="fhYellow  show-on-large hide-on-med-and-down ">
+        <div class="row s12 valign-wrapper">
+          <img src="../images/icon.png" alt="Logo" class="desktopLogo circle">
+            <h5 class="col s4 left">Social Media Manager</h5>
+            <div class="">
+                <ul class="row s6">
+                    <li class=" navText logoutButton" style="cursor: pointer;">Logout</li>
+                    <li class=" "><a class="navText white-text" href="./users.html">Users</a></li>
+                    <li class=" "><a class="navText" href="./admin.html">Home</a></li>
+                </ul>
+            </div>
+        </div>
+        
+     </header>
+    <!-- Mobile Header -->
+     <header class="show-on-medium-and-down hide-on-large-only fhYellow">
+            <ul id="slide-out" class="sidenav col">
+                <img src="../images/icon.png" alt="Logo" class="responsive-img circle">
+                <br>
+                <br>
+                <h2 class="center-align white-text">Social Media Manager</h2>
+                <li class="col s2 right "><a class="navText selected" href="./admin.html">Home</a></li>
+                <li class="col s2 right "><a class="navText white-text" href="./users.html">Users</a></li>
+                <li class="col s2 right navText logoutButton" style="cursor: pointer;"><a class="navText" href="">Logout</a></li>
+            </ul>
+            <a href="#" data-target="slide-out" class="sidenav-trigger black-text"><i class="material-icons">menu</i></a>
+     </header>
+
+     <main class="container ">
+      
+        <i id="addUser" class="material-icons right ">add</i>
+        <div class="grid" id="persons">
+              
+        </div>
+
+            
+          
+     </main>
+
+     
+
+     <div class="row alertCard" id="alert" style="display: none;">
+      <div class="col s12 m6">
+        <div class="card blue-grey darken-1">
+          <div class="card-content white-text">
+            <span class="card-title">You are back online!</span>
+            <p>Syncing data to server from cache, please wait while this works!</p>
+          </div>
+          <div class="card-action">
+            <a id="okbutton">Ok</a>
+          </div>
+        </div>
+      </div>
+     </div>  
+
+    <script src="/firebase.js" type="module"></script>
+    <script src="./users.js" type="module"></script>
+
+    <script src="../databasescripts/AuthDB.js" type="module"></script>
+</body>
+</html>

@@ -1,0 +1,154 @@
+/* Admin & User HTML CSS */
+@import url(https://fonts.googleapis.com/icon?family=Material+Icons);
+body {
+    height: 100vh;
+    margin: 0;
+    /* overflow: hidden; */
+    position: relative;
+}
+header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 20px;
+    height: 150px !important;
+}
+#containerSection {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center; 
+    gap: 20px; 
+}
+.center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 85vh;
+}
+.material-icons {
+    margin-left: 7vw;
+    font-size: 4rem !important;
+}
+/* Admin Page */
+.navText {
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-decoration: none;
+    color: black;
+}
+.navText:hover {
+    color: white;
+}
+#slide-out {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 50vw;
+    background-color: #F9BE1E;
+    padding: 20px;
+}
+#slide-out li {
+    font-size: larger !important;
+    padding: 30px;
+}
+.navText {
+    font-size: 1.5rem !important;
+}
+.selected {
+    font-weight: bold !important;
+}
+.desktopLogo {
+    margin: 10px;
+    margin-left: 50px;
+    height: 100px;
+}
+header div ul {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-evenly;
+    width: 30vw;
+}
+div {
+    /* margin: 5px; */
+}
+#addUser {
+    cursor: pointer;
+}
+.userCard {
+    width: 200px;
+    height: 400px;
+        
+}
+#cardholder {
+    height: auto;
+    overflow-y: scroll; 
+    height: 85vh;
+    /* margin-bottom: 30px; */
+}
+#submitButton {
+    margin-top: 80px;
+    right:0;
+    margin-left: 10px;
+}
+.adminPost {
+    padding: 20px;
+    height: 85vh;
+    position: relative;
+    overflow-y: scroll;
+}
+.postTextArea {
+    display: flex;
+    height: 100px;
+    max-height: 30vh;
+    justify-content: space-between;
+    margin-bottom: 40px;
+}
+textarea {
+    margin-top: 13px !important;
+    min-height: 2vh;
+    max-height: 20vh;
+}
+.file-field {
+    /* background-color: aqua; */
+    width: 50vw !important; 
+    height: 40px !important;
+    margin-top: 40px;
+}
+.grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    align-items: center;
+    gap: 20px;
+}
+main {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+#containerSection {
+    display: flex;
+    flex-direction: row-reverse;
+    flex-wrap: wrap;
+    justify-content: center; 
+    gap: 20px; 
+}
+#cardholder {
+        overflow-y: visible; 
+        height: auto;
+        width: 300px;
+}
+#cardholder img {
+    width: 100px;
+    height: 100px;
+}
+main {
+    display: flex;
+    flex-direction: column !important;
+    align-items: center;
+}
